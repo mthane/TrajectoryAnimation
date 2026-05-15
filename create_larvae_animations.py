@@ -64,6 +64,8 @@ COMPARE_CONDITIONS_SUBPLOTS = False
 APPEND_POOLED_SUMMARY_AT_END = True
 
 WINDOW_SIZE_FRAMES = 50
+# Optional separate sliding window for HC density (frames with data). None = use WINDOW_SIZE_FRAMES.
+HC_WINDOW_SIZE_FRAMES: Optional[int] = None
 FRAME_STRIDE = 1
 # Recording frame rate (frames per second) and output video FPS.
 RECORDING_FPS = 16
@@ -178,6 +180,7 @@ class VideoGenConfig:
     # Append full-recording summary after compare animation (multi-panel, same layout as compare video).
     append_pooled_summary_at_end: bool = True
     window_size_frames: int = 50
+    hc_window_size_frames: Optional[int] = None
     frame_stride: int = 1
     recording_fps: float = 16.0
     fps: int = 16
@@ -233,6 +236,7 @@ def config_from_module_globals() -> VideoGenConfig:
         compare_conditions_subplots=COMPARE_CONDITIONS_SUBPLOTS,
         append_pooled_summary_at_end=APPEND_POOLED_SUMMARY_AT_END,
         window_size_frames=WINDOW_SIZE_FRAMES,
+        hc_window_size_frames=HC_WINDOW_SIZE_FRAMES,
         frame_stride=FRAME_STRIDE,
         recording_fps=float(RECORDING_FPS),
         fps=FPS,
@@ -765,6 +769,13 @@ def effective_hc_density_bins(cfg: VideoGenConfig) -> int:
     return max(24, cfg.density_bins // 2)
 
 
+def effective_density_window_frames(cfg: VideoGenConfig, hc_mode: bool) -> int:
+    """Sliding window length in frames (with data) for larval vs HC density."""
+    if hc_mode and cfg.hc_window_size_frames is not None:
+        return max(1, int(cfg.hc_window_size_frames))
+    return max(1, int(cfg.window_size_frames))
+
+
 def compute_density_grid(
     x: np.ndarray,
     y: np.ndarray,
@@ -1021,12 +1032,13 @@ def create_density_animation(
     frame_sequence = unique_frames[:: cfg.frame_stride]
     x_edges = np.linspace(xlim[0], xlim[1], density_bins + 1)
     y_edges = np.linspace(ylim[0], ylim[1], density_bins + 1)
+    window_frames = effective_density_window_frames(cfg, hc_mode)
     vmax = _max_density(
         frame_sequence,
         frame_to_points,
         x_edges,
         y_edges,
-        cfg.window_size_frames,
+        window_frames,
         cfg.density_method,
         cfg.kde_sigma_bins,
         cfg.density_vmax_sample_frames,
@@ -1056,7 +1068,7 @@ def create_density_animation(
                 print(f"Density animation progress: {i}/{len(frame_sequence)}", flush=True)
             fk = float(f)
             append_frame_to_window(recent_frames, fk, frame_to_points)
-            window = get_window_points(fk, recent_frames, frame_to_points, cfg.window_size_frames)
+            window = get_window_points(fk, recent_frames, frame_to_points, window_frames)
             if len(window) == 0:
                 dens = np.zeros((density_bins, density_bins))
             else:
@@ -1447,12 +1459,13 @@ def create_density_animation_compare(
     frame_sequence = unique_frames[:: cfg.frame_stride]
     x_edges = np.linspace(xlim[0], xlim[1], density_bins + 1)
     y_edges = np.linspace(ylim[0], ylim[1], density_bins + 1)
+    window_frames = effective_density_window_frames(cfg, hc_mode)
     vmax = _max_density_across_conditions(
         frame_sequence,
         frame_to_points_by_cond,
         x_edges,
         y_edges,
-        cfg.window_size_frames,
+        window_frames,
         cfg.density_method,
         cfg.kde_sigma_bins,
         cfg.density_vmax_sample_frames,
@@ -1524,7 +1537,7 @@ def create_density_animation_compare(
                     fk,
                     recent_by_cond[cond],
                     fp,
-                    cfg.window_size_frames,
+                    window_frames,
                 )
                 nf = 1.0 if norm_factors is None else float(norm_factors.get(str(cond), 1.0))
                 if len(window) == 0:
@@ -1854,19 +1867,20 @@ def run_density_animation_pass(
     if cfg.save_summary_image:
         x_edges = np.linspace(xlim[0], xlim[1], bins_use + 1)
         y_edges = np.linspace(ylim[0], ylim[1], bins_use + 1)
+        hc_mode_summary = dm_normalized == "hc"
         vmax = _max_density(
             unique_frames_d[:: cfg.frame_stride],
             frame_to_points_d,
             x_edges,
             y_edges,
-            cfg.window_size_frames,
+            effective_density_window_frames(cfg, hc_mode_summary),
             cfg.density_method,
             cfg.kde_sigma_bins,
             cfg.density_vmax_sample_frames,
             norm_factor=norm_factor,
         )
         summary_path = cfg.output_dir / (
-            "larvae_density_hc_summary.png" if dm_normalized == "hc" else "larvae_density_summary.png"
+            "larvae_density_hc_summary.png" if hc_mode_summary else "larvae_density_summary.png"
         )
         sum_bgr = render_density_summary_bgr(
             xlim,
@@ -2216,6 +2230,22 @@ def build_arg_parser() -> argparse.ArgumentParser:
         help="Speed preset: fewer frames, coarser density, histogram mode, smaller figure (see FAST_PRESET_OVERRIDES in script).",
     )
     p.add_argument(
+        "--window-size-frames",
+        type=int,
+        default=None,
+        metavar="N",
+        dest="window_size_frames",
+        help="Larval density sliding window: last N frames with data (default from script, e.g. 50)",
+    )
+    p.add_argument(
+        "--hc-window-size-frames",
+        type=int,
+        default=None,
+        metavar="N",
+        dest="hc_window_size_frames",
+        help="HC density sliding window (frames with data). None = same as --window-size-frames.",
+    )
+    p.add_argument(
         "--frame-stride",
         type=int,
         default=None,
@@ -2352,6 +2382,10 @@ def merge_cli_into_config(cfg: VideoGenConfig, args: argparse.Namespace) -> Vide
         if lo >= hi:
             raise ValueError("--fixed-axis-limits requires MIN < MAX.")
         overrides["fixed_axis_xy_limits"] = (lo, hi)
+    if getattr(args, "window_size_frames", None) is not None:
+        overrides["window_size_frames"] = max(1, int(args.window_size_frames))
+    if getattr(args, "hc_window_size_frames", None) is not None:
+        overrides["hc_window_size_frames"] = max(1, int(args.hc_window_size_frames))
     if getattr(args, "frame_stride", None) is not None:
         overrides["frame_stride"] = max(1, int(args.frame_stride))
     if getattr(args, "fps", None) is not None:

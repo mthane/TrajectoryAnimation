@@ -140,8 +140,16 @@ python create_larvae_animations.py ./data/run.csv --compare-subplots --groups 4d
   --normalization max_visible_larvae --track-window-seconds 10 --all-animations \
   --compare-output-slug 4d_sated_vs_starved --petri-dish
 
-# Manuscript batch (both 4d and 5d pairs)
+# Manuscript batch (both 4d and 5d pairs; uses --fast by default)
+# Each pair: tracks + histogram density (base slug), then KDE density only (slug *_kde)
+# Density window: larval 15 s (240 frames), HC 30 s (480 frames) at 16 fps; trajectory trail: 10 s
 python generate_paper_outputs.py starvation2-2026-04-23_analyzed.csv --output-dir animations/paper
+
+# Publication-quality manuscript outputs (slower)
+python generate_paper_outputs.py starvation2-2026-04-23_analyzed.csv --no-fast
+
+# Fast preview of one pair + first 30s only
+python generate_paper_outputs.py data.csv --only 4d -- --test-duration-seconds 30
 ```
 
 ## 2) R version (legacy; may not run)
