@@ -2,9 +2,9 @@
 """Create larval trajectory animations from tracking data.
 
 Outputs (defaults):
-  - animations/larvae_tracks_window.mp4
-  - animations/larvae_tracks_uniform_color.mp4 (all larvae use TRACK_COLOR; omitted if main mode is already "same")
-  - animations/larvae_density.mp4
+  - outputs/animations/larvae_tracks_window.mp4
+  - outputs/animations/larvae_tracks_uniform_color.mp4 (all larvae use TRACK_COLOR; omitted if main mode is already "same")
+  - outputs/animations/larvae_density.mp4
 Optional summary PNGs when SAVE_SUMMARY_IMAGE is True (default: on).
 
 New parameters (see VideoGenConfig / argparse --help):
@@ -38,8 +38,8 @@ import cv2
 # =========================
 # Default CSV when you run `python create_larvae_animations.py` with no path.
 # Prefer: `python create_larvae_animations.py path/to/any_tracking_file.csv` or `--data`.
-DATA_PATH = Path("embedding_dan.csv")
-OUTPUT_DIR = Path("animations")
+DATA_PATH = Path("data/embedding_dan.csv")
+OUTPUT_DIR = Path("outputs/animations")
 
 # Optional fixed column names. Set to None for auto-detection.
 X_COLUMN_OVERRIDE = None  # Example: "centroid_x"

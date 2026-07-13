@@ -76,7 +76,7 @@ SUMMARY_PAUSE_SECONDS = 0.25
 
 @dataclass
 class FinalizeKdeConfig:
-    input_csv: Path = Path("starvation2-2026-04-23_analyzed.csv")
+    input_csv: Path = Path("data/starvation2-2026-04-23_analyzed.csv")
     output_dir: Path = Path("outputs/starvation_kde_final")
     playback_speeds: Tuple[float, ...] = DEFAULT_PLAYBACK_SPEEDS
     make_hc: bool = True

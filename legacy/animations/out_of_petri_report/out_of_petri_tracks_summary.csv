@@ -1,0 +1,5 @@
+track_id,condition,condition_label,trial,name,group,n_outside_points,max_radius,max_distance_outside,frame_min,frame_max,x_at_max_radius,y_at_max_radius
+1637,5d_fed,5d Sated,lightbox1-2026-02-18_11_18_56,41.csv,starvation,52,77.43030084618037,32.43030084618037,826,877,50.5668,-58.6383
+2937,5d_fed,5d Sated,lightbox1-2026-02-21_11_49_43,103.csv,starvation,31,65.86167807192587,20.861678071925866,1077,1107,56.9407,-33.0986
+2354,5d_fed,5d Sated,lightbox1-2026-02-19_10_55_48,153.csv,starvation,28,58.107983862116576,13.107983862116576,1645,1672,57.9174,-4.7024
+2366,5d_fed,5d Sated,lightbox1-2026-02-19_10_55_48,190.csv,starvation,10,51.73915717954826,6.739157179548258,2211,2220,43.3761,-28.2038

@@ -282,12 +282,12 @@ def main(argv: List[str] | None = None) -> None:
         "input_csv",
         nargs="?",
         type=Path,
-        default=Path("starvation2-2026-04-23_analyzed.csv"),
+        default=Path("data/starvation2-2026-04-23_analyzed.csv"),
     )
     parser.add_argument(
         "--output-dir",
         type=Path,
-        default=Path("animations/out_of_petri_report"),
+        default=Path("outputs/qc/out_of_petri_report"),
     )
     parser.add_argument("--petri-dish-radius", type=float, default=None)
     args = parser.parse_args(argv)

@@ -1,9 +1,19 @@
-prototype_hex_pie_animation.py
-/animations
-embedding_dan.csv
-Learning_annotated_01_12.csv
-/__pycache__
-starvation2-2026-04-23_analyzed.csv
-outputs/starvation_kde_final/5d_fed_vs_starved/larvae_density_hc_compare_5d_fed_vs_starved_2x.mp4
-*.png
+# Large input CSVs (place files in data/ — see data/README.md)
+data/*.csv
+
+# Generated media (ship separately for submission)
 *.mp4
+*.png
+
+# Python cache
+__pycache__/
+*.pyc
+.venv/
+
+# Legacy archives (optional local backups)
+legacy/archives/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.zip
