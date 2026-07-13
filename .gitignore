@@ -4,3 +4,6 @@ embedding_dan.csv
 Learning_annotated_01_12.csv
 /__pycache__
 starvation2-2026-04-23_analyzed.csv
+outputs/starvation_kde_final/5d_fed_vs_starved/larvae_density_hc_compare_5d_fed_vs_starved_2x.mp4
+*.png
+*.mp4

@@ -1,0 +1,60 @@
+{
+  "kde_only": true,
+  "histogram_outputs": false,
+  "global_vmax_movie": {
+    "animals": 0.5834765031933785,
+    "hc": 0.021733320020139217
+  },
+  "global_vmax_summary": {
+    "animals": 2.1192602503299716,
+    "hc": 0.05724595524370671
+  },
+  "kde_sigma_bins_movie": 3.8,
+  "kde_sigma_bins_summary": 1.6,
+  "density_bins_movie": 56,
+  "density_bins_summary": 96,
+  "hc_density_bins_movie": 40,
+  "hc_density_bins_summary": 64,
+  "density_vmax_percentile_movie": 99.5,
+  "hc_density_vmax_percentile_movie": 99.0,
+  "density_vmax_percentile_summary": 93.0,
+  "hc_density_vmax_percentile_summary": 90.0,
+  "density_use_sqrt_norm": false,
+  "hc_density_use_log_norm": false,
+  "density_cmap": "viridis",
+  "density_normalization": "max_visible_larvae",
+  "window_size_frames": 180,
+  "hc_window_size_frames": 360,
+  "track_history_seconds": 10.0,
+  "summary_duration_seconds": 10.0,
+  "append_pooled_summary_at_end": true,
+  "test_duration_seconds": null,
+  "playback_speeds": [
+    1.0,
+    2.0
+  ],
+  "excluded_track_ids": [
+    "1637",
+    "2937",
+    "2354",
+    "2366"
+  ],
+  "conditions": [
+    "4d_fed",
+    "4d_starved",
+    "5d_fed",
+    "5d_starved"
+  ],
+  "compare_pairs": [
+    {
+      "slug": "4d_fed_vs_starved",
+      "fed": "4d_fed",
+      "starved": "4d_starved"
+    },
+    {
+      "slug": "5d_fed_vs_starved",
+      "fed": "5d_fed",
+      "starved": "5d_starved"
+    }
+  ]
+}

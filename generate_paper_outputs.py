@@ -22,8 +22,8 @@ PAPER_GROUP_LABELS: Tuple[Tuple[str, str], ...] = (
 
 # Paired comparisons: (slug for filenames, group A, group B)
 PAPER_COMPARISONS: Tuple[Tuple[str, str, str], ...] = (
-    ("4d_sated_vs_starved", "4d_fed", "4d_starved"),
-    ("5d_sated_vs_starved", "5d_fed", "5d_starved"),
+    ("4d_fed_vs_starved", "4d_fed", "4d_starved"),
+    ("5d_fed_vs_starved", "5d_fed", "5d_starved"),
 )
 
 # Both spatial density estimators for manuscript figures
@@ -137,7 +137,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
     p.add_argument(
         "--summary-duration-seconds",
         type=float,
-        default=2.5,
+        default=5.0,
         help="Hold full-recording summary frame at end of each video",
     )
     p.add_argument(

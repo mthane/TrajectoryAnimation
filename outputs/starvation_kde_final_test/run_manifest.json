@@ -1,0 +1,34 @@
+{
+  "kde_only": true,
+  "histogram_outputs": false,
+  "global_vmax": {
+    "animals": 0.6224872222542762,
+    "hc": 0.01745432533323765
+  },
+  "kde_sigma_bins_movie": 3.8,
+  "kde_sigma_bins_summary": 1.6,
+  "density_bins_movie": 64,
+  "density_bins_summary": 120,
+  "density_vmax_percentile": 99.5,
+  "hc_density_vmax_percentile": 99.0,
+  "density_use_sqrt_norm": true,
+  "density_cmap": "cividis",
+  "density_normalization": "max_visible_larvae",
+  "window_size_frames": 180,
+  "playback_speeds": [
+    1.0,
+    2.0
+  ],
+  "excluded_track_ids": [
+    "1637",
+    "2937",
+    "2354",
+    "2366"
+  ],
+  "conditions": [
+    "4d_fed",
+    "4d_starved",
+    "5d_fed",
+    "5d_starved"
+  ]
+}
